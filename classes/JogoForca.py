@@ -1,7 +1,7 @@
 import os
 import unicodedata
 
-from classes.Agente import AgenteForca
+from classes.AgenteForca import AgenteForca
 from classes.BancoDeConhecimento import BancoDeConhecimento
 
 
@@ -96,8 +96,16 @@ class JogoForca:
 
     def jogar(self):
         print(">>> JOGO DA FORCA - AGENTE INTELIGENTE UEL <<<")
+
         entrada = input("Digite a palavra secreta para o Agente tentar adivinhar: ")
         self.palavra_secreta = self.normalizar(entrada.strip())
+
+        temperatura = input("Escolha a temperatura do agente, de 0 a 10: ")
+        while (not temperatura.isnumeric()) or float(temperatura) < 0 or float(temperatura) > 10 :
+            temperatura = input("Digite um número válido para a temperatura (0 a 10): ")
+
+        self.agente.temperatura = float(temperatura)/10
+
 
         if not self.palavra_secreta:
             print("Palavra inválida.")

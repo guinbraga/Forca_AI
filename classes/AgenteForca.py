@@ -9,7 +9,7 @@ class AgenteForca:
         self.letras_erradas = set()
         self.padrao_atual = []  # Ex: ['C', '_', 'S', 'A']
         self.candidatos = []  # Palavras possíveis baseadas no filtro atual
-        self.temperatura = temperatura / 10  # valor de 0 a 10
+        self.temperatura = temperatura
 
     def perceber_ambiente(self, tamanho_palavra, letras_reveladas, letras_erradas_jogo):
         # Coleta informações do estado atual do jogo
@@ -62,14 +62,23 @@ class AgenteForca:
                 if letra not in self.letras_tentadas:
                     contador[letra] += 1
 
-        if not contador:
-            return "LETRA", random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ")  # Fallback raro
+        # ordenamos as letras possíveis por contagem e depois alfabeticamente
+        opcoes_ordenadas = sorted(contador.items(), key=lambda x: (-x[1], x[0]))
+
+        # extraímos somente as letras
+        letras_rankeadas = [item[0] for item in opcoes_ordenadas]
 
         probabilidade = random.random()
-        if probabilidade < self.temperatura:
-            indice_letra_escolhida = 1
-        else:
-            indice_letra_escolhida = 0
+        limite = self.temperatura
+        indice_escolhido = 0
 
-        melhor_letra = contador.most_common(2)[indice_letra_escolhida][0]
-        return "LETRA", melhor_letra
+
+        while probabilidade < limite:
+            #verificamos se ainda há letras candidatas, não deixamos o índice passar
+            if indice_escolhido < len(letras_rankeadas) - 1:
+                indice_escolhido += 1
+                limite = limite / 2.0
+            else:
+                break
+
+        return "LETRA", letras_rankeadas[indice_escolhido]
