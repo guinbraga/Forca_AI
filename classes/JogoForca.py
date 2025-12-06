@@ -98,6 +98,8 @@ class JogoForca:
         print(">>> JOGO DA FORCA - AGENTE INTELIGENTE UEL <<<")
 
         entrada = input("Digite a palavra secreta para o Agente tentar adivinhar: ")
+        while not entrada.isalpha():
+            entrada = input("Digite uma palavra secreta válida para o Agente tentar adivinhar: ")
         self.palavra_secreta = self.normalizar(entrada.strip())
 
         temperatura = input("Escolha a temperatura do agente, de 0 a 10: ")
